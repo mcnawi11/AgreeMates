@@ -52,7 +52,19 @@ var apartment = function(app) {
 
   // Removes apartment from the database
   app.delete('/apartment/', function(req, res) {
-    res.end();
+    var id = req.user.attributes.apartment_id;
+	if(id != null) {
+		new ApartmentModel({id : id})
+			.delete()
+			.then(function(apartment) {
+					res.json({result : 'success'});
+					})
+			.otherwise(function(error) {
+				res.json({result : 'error', error : error});
+			});
+	} else {
+		res.json({result : 'error'});
+	}
   });
 
 };
